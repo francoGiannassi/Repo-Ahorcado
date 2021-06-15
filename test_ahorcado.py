@@ -23,12 +23,14 @@ class TestsLogIn(unittest.TestCase):
         ahorcado = Ahorcado()
         us = Usuario()
         us.setNombre("Franco")
+        ahorcado.getUsuarioActual().setNombre("Franco")
         self.assertTrue(ahorcado.existeUsuario(us.getNombre()))
 
     def test_valida_no_existencia_del_nombre(self):
         ahorcado = Ahorcado()
         us = Usuario()
         us.setNombre("Franco1")
+        ahorcado.getUsuarioActual().setNombre("Franco")
         self.assertFalse(ahorcado.existeUsuario(us.getNombre()))
 
 
@@ -36,22 +38,27 @@ class TestsConfiguracion(unittest.TestCase):
     
     def test_valida_ninguna_palabra_cargada(self):
         ahorcado = Ahorcado()
+        ahorcado.setPalabra("")
         self.assertIn("", ahorcado.getPalabra())
 
     def test_valida_una_palabra_cargada(self):
         ahorcado = Ahorcado()
+        ahorcado.setPalabrasIntermedias(["Juego","Ahorcado","Visual","Estudio","Codigo"])
         self.assertIn("Ahorcado", ahorcado.getPalabrasIntermedias())
 
     def test_valida_dificultad_facil(self):
         ahorcado = Ahorcado()
+        ahorcado.setPalabrasFaciles(["Ola","Rio","Casa","Via","Sol"])
         self.assertIn("Ola",ahorcado.getPalabrasFaciles())
 
     def test_valida_dificultad_intermedia(self):
         ahorcado = Ahorcado()
+        ahorcado.setPalabrasIntermedias(["Juego","Ahorcado","Visual","Estudio","Codigo"])
         self.assertIn("Codigo",ahorcado.getPalabrasIntermedias())
 
     def test_valida_dificultad_dificil(self):
         ahorcado = Ahorcado()
+        ahorcado.setPalabrasDificiles(["Otorrinolaringologo","Desoxirribonucleico","Onomatopeya","Electroencefalografista"])
         self.assertIn("Onomatopeya",ahorcado.getPalabrasDificiles())
 
 class TestsIngresoLetra(unittest.TestCase):

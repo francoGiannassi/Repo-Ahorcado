@@ -3,26 +3,12 @@ import random
 
 class Ahorcado:
 
-    usuario1 = Usuario()
-    usuario1.setNombre("juan2")
-
-    usuario2 = Usuario()
-    usuario2.setNombre("pedro3")
-
-    usuario3 = Usuario()
-    usuario3.setNombre("silvia4") 
-
-    usuario4 = Usuario()
-    usuario4.setNombre("hernan5") 
-
     usuarioActual = Usuario()
-    usuarioActual.setNombre("Franco1")
+    usuarios = [usuarioActual]
 
-    usuarios = [usuario1,usuario2,usuario3,usuario4,usuarioActual]
-
-    palabrasFaciles = ["Ola","Rio","Casa","Via","Sol"]
-    palabrasIntermedias = ["Juego","Ahorcado","Visual","Estudio","Codigo"]
-    palabrasDificiles = ["Otorrinolaringologo","Desoxirribonucleico","Onomatopeya","Electroencefalografista"]
+    palabrasFaciles = []
+    palabrasIntermedias = []
+    palabrasDificiles = []
     palabra = ""
 
     letrasCorrectas = []
@@ -32,11 +18,20 @@ class Ahorcado:
     def getPalabrasFaciles(self):
         return self.palabrasFaciles
 
+    def setPalabrasFaciles(self,palabras):
+        self.palabrasFaciles = palabras
+
     def getPalabrasIntermedias(self):
         return self.palabrasIntermedias
 
+    def setPalabrasIntermedias(self,palabras):
+        self.palabrasIntermedias = palabras
+
     def getPalabrasDificiles(self):
         return self.palabrasDificiles
+
+    def setPalabrasDificiles(self,palabras):
+        self.palabrasDificiles = palabras
 
     def setPalabra(self,palabra):
         self.palabra = palabra
@@ -56,6 +51,9 @@ class Ahorcado:
 
     def getUsuarios(self):
         return self.usuarios
+
+    def setUsuarios(self,usuarios):
+        self.usuarios.append(usuarios)
 
     def getNombresUsuarios(self):
         nombres = []
