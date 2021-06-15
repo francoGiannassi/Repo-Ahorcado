@@ -1,16 +1,67 @@
+from usuario import Usuario
+import random
+
 class Ahorcado:
 
-    nombreUsuario = None
-    palabra = "Ahorcado"
+    usuario1 = Usuario()
+    usuario1.setNombre("juan2")
+
+    usuario2 = Usuario()
+    usuario2.setNombre("pedro3")
+
+    usuario3 = Usuario()
+    usuario3.setNombre("silvia4") 
+
+    usuario4 = Usuario()
+    usuario4.setNombre("hernan5") 
+
+    usuarioActual = Usuario()
+    usuarioActual.setNombre("Franco1")
+
+    usuarios = [usuario1,usuario2,usuario3,usuario4,usuarioActual]
+
+    palabrasFaciles = ["Ola","Rio","Casa","Via","Sol"]
+    palabrasIntermedias = ["Juego","Ahorcado","Visual","Estudio","Codigo"]
+    palabrasDificiles = ["Otorrinolaringologo","Desoxirribonucleico","Onomatopeya","Electroencefalografista"]
+    palabra = ""
+
     letrasCorrectas = []
     letrasIncorrectas = []
     intentosFallidos = 0
 
-    def getNombreUsuario(self):
-        return self.nombreUsuario
+    def getPalabrasFaciles(self):
+        return self.palabrasFaciles
 
-    def setNombreUsuario(self,nombre):
-        self.nombreUsuario = nombre
+    def getPalabrasIntermedias(self):
+        return self.palabrasIntermedias
+
+    def getPalabrasDificiles(self):
+        return self.palabrasDificiles
+
+    def setPalabra(self,palabra):
+        self.palabra = palabra
+
+    def seleccionarPalabraRandom(self,palabra,palabras):
+        palabra = random.choice(palabras)
+        return palabra
+
+    def getUsuarioActual(self):
+        return self.usuarioActual
+    
+    def existeUsuario(self,nombre):
+        if nombre in self.getNombresUsuarios():
+            return True
+        else:
+            return False
+
+    def getUsuarios(self):
+        return self.usuarios
+
+    def getNombresUsuarios(self):
+        nombres = []
+        for us in self.usuarios:
+            nombres.append(us.getNombre())
+        return nombres
 
     def getPalabra(self):
         return self.palabra
@@ -65,3 +116,5 @@ class Ahorcado:
             if letra not in self.letrasCorrectas:
                 esPalabra = False
         return esPalabra
+
+
