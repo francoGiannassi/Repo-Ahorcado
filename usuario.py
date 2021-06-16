@@ -3,7 +3,7 @@ class Usuario:
     nombre = ""
     puntuacionMaxima = 0
 
-    def __init__(self, nombre=None, puntuacionMaxima=None):
+    def __init__(self, nombre="", puntuacionMaxima=0):
         self.nombre = nombre
         self.puntuacionMaxima = puntuacionMaxima
 

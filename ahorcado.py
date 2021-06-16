@@ -10,7 +10,7 @@ class Ahorcado:
     palabrasDificiles = []
 
     usuarioActual = Usuario()
-    usuarios = [Usuario() for i in range(1)]
+    usuarios = []
     usuarios.append(usuarioActual)
 
     letrasCorrectas = []
@@ -67,6 +67,14 @@ class Ahorcado:
         print(cartel)
         print("")
         print(self.calcularResultadoFinal()," puntos")
+        print("")
+
+        if self.calcularResultadoFinal() > self.usuarioActual.getPuntuacionMaxima():
+            self.usuarioActual.setPuntuacionMaxima(self.calcularResultadoFinal())
+
+        print("Top 10:")
+        for i, puesto in enumerate(self.puestosOrdenadosRanking()):
+            print(i+1 , " - ", puesto.getNombre(), " - ", puesto.getPuntuacionMaxima())
         
     def getEstadoFinalJuego(self):
         if self.intentosFallidos == 7:
@@ -146,8 +154,13 @@ class Ahorcado:
     def getUsuarios(self):
         return self.usuarios
 
+    def limpiarUsuarios(self):
+        self.usuarios = []
+        self.usuarios.append(self.usuarioActual)
+
     def setUsuarios(self,usuarios):
-        self.usuarios.append(usuarios)
+        for us in usuarios:
+            self.usuarios.append(us)
 
     def getNombresUsuarios(self):
         nombres = []
@@ -231,6 +244,12 @@ class Ahorcado:
 
     def puestosOrdenadosRanking(self):
         ranking = self.getUsuarios()
-        #ranking.sort(key=lambda u : u.puntuacionMaxima, reverse=True)
+        ranking.sort(key=lambda u : u.puntuacionMaxima, reverse=True)
         return ranking
+    
+    def rankingJugadorActual(self):
+        for i, us in enumerate(self.puestosOrdenadosRanking()):
+            if us.getNombre() == self.getUsuarioActual().getNombre() and us.getPuntuacionMaxima() == self.getUsuarioActual().getPuntuacionMaxima():
+                return i+1
+
         

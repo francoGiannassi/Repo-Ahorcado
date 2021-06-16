@@ -291,16 +291,42 @@ class TestsResultadoFinal(unittest.TestCase):
     
 class TestsRanking(unittest.TestCase):
 
-    def test_valida_1er_posicion_ranking(self):
+    def test_valida_1er_posicion_top10(self):
         ahorcado = Ahorcado()
+        ahorcado.limpiarUsuarios()
+        ahorcado.setUsuarios([Usuario("juan2",200),Usuario("fede3",100),Usuario("diego1",300),Usuario("pedro7",150),Usuario("julian9",50),
+                                    Usuario("damian4",250),Usuario("victor11",350),Usuario("roberto10",25),Usuario("david14",125)])
+        ahorcado.getUsuarioActual().setNombre("franco1")                                
+        ahorcado.getUsuarioActual().setPuntuacionMaxima(400)
+        self.assertEqual(ahorcado.rankingJugadorActual(),1)
 
-
-    def test_valida_posicion_intermedia_ranking(self):
+    def test_valida_posicion_intermedia_top10(self):
         ahorcado = Ahorcado()
+        ahorcado.limpiarUsuarios()
+        ahorcado.setUsuarios([Usuario("juan2",200),Usuario("fede3",100),Usuario("diego1",300),Usuario("pedro7",150),Usuario("julian9",50),
+                                    Usuario("damian4",250),Usuario("victor11",350),Usuario("roberto10",25),Usuario("david14",125)])
+        ahorcado.getUsuarioActual().setNombre("franco1")                                
+        ahorcado.getUsuarioActual().setPuntuacionMaxima(175)
+        self.assertEqual(ahorcado.rankingJugadorActual(),5)
 
-
-    def test_valida_ultima_posicion_ranking(self):
+    def test_valida_ultima_posicion_top10(self):
         ahorcado = Ahorcado()
+        ahorcado.limpiarUsuarios()
+        ahorcado.setUsuarios([Usuario("juan2",200),Usuario("fede3",100),Usuario("diego1",300),Usuario("pedro7",150),Usuario("julian9",50),
+                                    Usuario("damian4",250),Usuario("victor11",350),Usuario("roberto10",25),Usuario("david14",125)])
+        ahorcado.getUsuarioActual().setNombre("franco1")                                
+        ahorcado.getUsuarioActual().setPuntuacionMaxima(15)
+        self.assertEqual(ahorcado.rankingJugadorActual(),10)
+
+    def test_valida_posicion_fuera_limites_top_10_puesto_13(self):
+        ahorcado = Ahorcado()
+        ahorcado.limpiarUsuarios()
+        ahorcado.setUsuarios([Usuario("juan2",200),Usuario("fede3",100),Usuario("diego1",300),Usuario("pedro7",150),Usuario("julian9",50),
+                                Usuario("damian4",250),Usuario("victor11",350),Usuario("roberto10",25),Usuario("david14",125),
+                                    Usuario("rodrigo22",54),Usuario("alberto44",293),Usuario("pablo76",36)])
+        ahorcado.getUsuarioActual().setNombre("franco1")                                
+        ahorcado.getUsuarioActual().setPuntuacionMaxima(15)
+        self.assertEqual(ahorcado.rankingJugadorActual(),13)
 
 
 
