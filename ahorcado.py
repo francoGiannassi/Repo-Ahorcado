@@ -2,18 +2,96 @@ from usuario import Usuario
 import random
 
 class Ahorcado:
-
-    usuarioActual = Usuario()
-    usuarios = [usuarioActual]
-
+    
+    #Variables
+    palabra = ""
     palabrasFaciles = []
     palabrasIntermedias = []
     palabrasDificiles = []
-    palabra = ""
+
+    usuarioActual = Usuario()
+    usuarios = [Usuario() for i in range(1)]
+    usuarios.append(usuarioActual)
 
     letrasCorrectas = []
     letrasIncorrectas = []
+
     intentosFallidos = 0
+    intentosTotales = 0
+
+    palabraArriesgadaAcertada = False
+
+    #Juego
+    def jugar(self):
+
+        print("Ahorcado")
+        print("1 - Loguearse")
+        print("2 - Ingresar como anónimo")
+        op = int(input("Opción: "))
+        if op == 1:
+            self.getUsuarioActual().setNombre(input("Nombre de Usuario: "))
+        elif op == 2:
+            self.getUsuarioActual().setNombre("")
+
+        print("Dificultad:")
+        print("1 - Facil")
+        print("2 - Intermedio")
+        print("3 - Dificil")
+        dif = int(input("Opción: "))
+        if dif == 1:
+           self.setPalabra(self.seleccionarPalabraRandom(self.palabrasFaciles)) 
+        elif dif == 2:
+           self.setPalabra(self.seleccionarPalabraRandom(self.palabrasIntermedias))
+        elif dif == 3:
+           self.setPalabra(self.seleccionarPalabraRandom(self.palabrasDificiles))
+        
+        print("")
+        print("Arranca el Juego!! Suerte!!")
+        while self.getEstadoFinalJuego() == "En Juego":
+            print(self.getPalabraParcial())
+            letra_op = input("Ingresa una letra (0 - arriesga palabra): ")
+            if letra_op != str(0):
+                self.ingresaLetra(letra_op)
+            else:
+                self.arriesgaPalabra(input("Ingresa la palabra a arriesgar: "))
+            print("Intentos Restantes: ", self.getIntentosRestantes())
+        
+        cartel = ""
+        print("")
+        print(self.getPalabra().upper())
+        print("")
+        if self.getEstadoFinalJuego() == "Ganado":
+            cartel = "Ganaste!"
+        elif self.getEstadoFinalJuego() == "Perdido":
+            cartel = "Perdiste!"
+        print(cartel)
+        print("")
+        print(self.calcularResultadoFinal()," puntos")
+        
+    def getEstadoFinalJuego(self):
+        if self.intentosFallidos == 7:
+            return "Perdido"
+        elif self.esPalabraFinal():
+            return "Ganado"
+        else: 
+            return "En Juego"
+
+    #Palabras
+    def getPalabra(self):
+        return self.palabra
+
+    def setPalabra(self,palabra):
+        self.palabra = palabra
+
+    def getPalabraParcial(self):
+        palabraParcial = ""
+        for letra in self.palabra:
+            if letra in self.letrasCorrectas:
+                palabraParcial += letra.lower()
+            else: 
+                palabraParcial += "-"
+                
+        return palabraParcial.capitalize()
 
     def getPalabrasFaciles(self):
         return self.palabrasFaciles
@@ -33,22 +111,38 @@ class Ahorcado:
     def setPalabrasDificiles(self,palabras):
         self.palabrasDificiles = palabras
 
-    def setPalabra(self,palabra):
-        self.palabra = palabra
-
-    def seleccionarPalabraRandom(self,palabra,palabras):
+    def seleccionarPalabraRandom(self,palabras):
         palabra = random.choice(palabras)
         return palabra
-
-    def getUsuarioActual(self):
-        return self.usuarioActual
+   
+    def esPalabraFinal(self):
+        if self.getPalabra().lower() == self.getPalabraParcial().lower():
+            return True
+        else:
+            return False
     
-    def existeUsuario(self,nombre):
-        if nombre in self.getNombresUsuarios():
+    def arriesgaPalabra(self, palabra):
+        if self.esPalabraPermitida(palabra):
+            if palabra.lower() == self.palabra.lower():
+                for letra in palabra:
+                    self.letrasCorrectas.append(letra.lower())
+                    self.letrasCorrectas.append(letra.upper())
+                self.palabraArriesgadaAcertada = True
+            else:
+                self.sumarIntentoFallido()
+                self.sumarIntentoFallido()
+            self.sumarIntentoTotal()
+
+    def esPalabraPermitida(self, palabra):
+        if palabra.isalpha() and palabra != "":
             return True
         else:
             return False
 
+    #Usuarios
+    def getUsuarioActual(self):
+        return self.usuarioActual
+    
     def getUsuarios(self):
         return self.usuarios
 
@@ -61,19 +155,27 @@ class Ahorcado:
             nombres.append(us.getNombre())
         return nombres
 
-    def getPalabra(self):
-        return self.palabra
-
-    def ingresaLetra(self, letra):
-        if letra == "" or not letra.isalpha():
-            self.letrasIncorrectas.append(letra)
-        elif self.esLetraCorrecta(letra):
-            self.letrasCorrectas.append(letra.lower())
-            self.letrasCorrectas.append(letra.upper())
+    def existeUsuario(self,nombre):
+        if nombre in self.getNombresUsuarios():
+            return True
         else:
-            self.letrasIncorrectas.append(letra.lower())
-            self.letrasIncorrectas.append(letra.upper())
-            self.sumarIntentoFallido()
+            return False
+
+    #Letras
+    def ingresaLetra(self, letra):
+        if not self.esLetraRepetida(letra):
+            if letra == "" or not letra.isalpha():
+                self.letrasIncorrectas.append(letra)
+            elif self.esLetraCorrecta(letra):
+                self.letrasCorrectas.append(letra.lower())
+                self.letrasCorrectas.append(letra.upper())
+                self.sumarIntentoTotal()
+            else:
+                self.letrasIncorrectas.append(letra.lower())
+                self.letrasIncorrectas.append(letra.upper())
+                if not self.getIntentosRestantes() <= 0:
+                    self.sumarIntentoFallido()
+                    self.sumarIntentoTotal()
         
     def getLetrasCorrectas(self):
         return self.letrasCorrectas
@@ -82,37 +184,53 @@ class Ahorcado:
         return self.letrasIncorrectas
 
     def esLetraCorrecta(self, letra):
-        if letra.lower() in self.palabra:
+        if letra.lower() in self.palabra.lower():
             return True
         else:
             return False
-        
-    def getPalabraParcial(self):
-        palabraParcial = ""
-        for letra in self.palabra:
-            if letra in self.letrasCorrectas:
-                palabraParcial += letra.upper()
-            else: 
-                palabraParcial += "-"
-        return palabraParcial
     
+    def esLetraRepetida(self, letra):
+        if letra in self.getLetrasCorrectas() or letra in self.getLetrasIncorrectas():
+            return True
+        else:
+            return False
+    
+    def limpiarLetras(self):
+        self.letrasCorrectas = []
+        self.letrasIncorrectas = []
+
+    #Intentos
+    def sumarIntentoTotal(self):
+        self.intentosTotales+=1
+
+    def getIntentosTotales(self):
+        return self.intentosTotales
+
     def sumarIntentoFallido(self):
         self.intentosFallidos+=1
     
     def getIntentosFallidos(self):
-        return self.intentosFallidos
+        if self.intentosFallidos <= 7:
+            return self.intentosFallidos
+        else:
+            return 7
 
-    def getEstadoFinalJuego(self):
-        if self.intentosFallidos == 7:
-            return "Perdido"
-        elif self.esPalabraFinal():
-            return "Ganado"
-    
-    def esPalabraFinal(self):
-        esPalabra = True
-        for letra in self.palabra:
-            if letra not in self.letrasCorrectas:
-                esPalabra = False
-        return esPalabra
+    def getIntentosRestantes(self):
+        return 7 - self.getIntentosFallidos()
 
+    #Resultado Final
 
+    def calcularResultadoFinal(self):
+        largoPalabra = len(self.palabra)
+        resultado = largoPalabra*(self.getIntentosRestantes() ** 2)/(self.getIntentosTotales())
+        if self.palabraArriesgadaAcertada:
+            resultado = resultado*2
+        return round(resultado)
+
+    #Ranking
+
+    def puestosOrdenadosRanking(self):
+        ranking = self.getUsuarios()
+        #ranking.sort(key=lambda u : u.puntuacionMaxima, reverse=True)
+        return ranking
+        

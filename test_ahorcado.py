@@ -61,7 +61,13 @@ class TestsConfiguracion(unittest.TestCase):
         ahorcado.setPalabrasDificiles(["Otorrinolaringologo","Desoxirribonucleico","Onomatopeya","Electroencefalografista"])
         self.assertIn("Onomatopeya",ahorcado.getPalabrasDificiles())
 
-class TestsIngresoLetra(unittest.TestCase):
+    def test_valida_palabra_random_seleccionada(self):
+        ahorcado = Ahorcado()
+        listaDificil = ["Otorrinolaringologo","Desoxirribonucleico","Onomatopeya","Electroencefalografista"]
+        ahorcado.setPalabrasDificiles(listaDificil)
+        self.assertIn(ahorcado.seleccionarPalabraRandom(listaDificil),ahorcado.getPalabrasDificiles())
+
+class TestsJuego(unittest.TestCase):
 
     def test_valida_letra_correcta(self):
         ahorcado7 = Ahorcado()
@@ -105,6 +111,18 @@ class TestsIngresoLetra(unittest.TestCase):
         ahorcado.ingresaLetra("t")
         self.assertFalse(ahorcado.esLetraCorrecta("t"))
     
+    def test_es_letra_repetida(self):
+        ahorcado = Ahorcado()
+        ahorcado.setPalabra("Ahorcado")
+        ahorcado.ingresaLetra("h")
+        self.assertTrue(ahorcado.esLetraRepetida("h"))
+
+    def test_es_letra_no_repetida(self):
+        ahorcado = Ahorcado()
+        ahorcado.setPalabra("Ahorcado")
+        ahorcado.ingresaLetra("h")
+        self.assertFalse(ahorcado.esLetraRepetida("o"))
+
     def test_palabra_parcial_correcta(self):
         ahorcado = Ahorcado()
         ahorcado.setPalabra("Ahorcado")
@@ -112,7 +130,7 @@ class TestsIngresoLetra(unittest.TestCase):
         ahorcado.ingresaLetra("H")
         ahorcado.ingresaLetra("C")
         ahorcado.ingresaLetra("D")
-        self.assertEqual(ahorcado.getPalabraParcial(),"AH--CAD-")
+        self.assertEqual(ahorcado.getPalabraParcial(),"Ah--cad-")
     
     def test_valida_conteo_intentos_fallidos(self):
         ahorcado = Ahorcado()
@@ -123,31 +141,82 @@ class TestsIngresoLetra(unittest.TestCase):
         self.assertEqual(ahorcado.getIntentosFallidos(),3)
 
     def test_valida_tope_maximo_intentos_fallidos(self):
-        ahorcado1 = Ahorcado()
-        ahorcado1.setPalabra("Ahorcado")
-        ahorcado1.ingresaLetra("f")
-        ahorcado1.ingresaLetra("i")
-        ahorcado1.ingresaLetra("m")
-        ahorcado1.ingresaLetra("u")
-        ahorcado1.ingresaLetra("j")
-        ahorcado1.ingresaLetra("k")
-        ahorcado1.ingresaLetra("p")
-        self.assertEqual(ahorcado1.getIntentosFallidos(),7)
+        ahorcado11 = Ahorcado()
+        ahorcado11.limpiarLetras()
+        ahorcado11.setPalabra("Ahorcado")
+        ahorcado11.ingresaLetra("f")
+        ahorcado11.ingresaLetra("i")
+        ahorcado11.ingresaLetra("m")
+        ahorcado11.ingresaLetra("u")
+        ahorcado11.ingresaLetra("j")
+        ahorcado11.ingresaLetra("k")
+        ahorcado11.ingresaLetra("p")
+        self.assertEqual(ahorcado11.getIntentosFallidos(),7)
+
+    def test_valida_intentos_restantes(self):
+        ahorcado11 = Ahorcado()
+        ahorcado11.limpiarLetras()
+        ahorcado11.setPalabra("Ahorcado")
+        ahorcado11.ingresaLetra("f")
+        ahorcado11.ingresaLetra("i")
+        ahorcado11.ingresaLetra("m")
+        self.assertEqual(ahorcado11.getIntentosRestantes(),4)
+
+    def test_valida_intentos_restantes_no_sean_menores_a_0(self):
+        ahorcado11 = Ahorcado()
+        ahorcado11.limpiarLetras()
+        ahorcado11.setPalabra("Ahorcado")
+        ahorcado11.ingresaLetra("f")
+        ahorcado11.ingresaLetra("i")
+        ahorcado11.ingresaLetra("m")
+        ahorcado11.ingresaLetra("t")
+        ahorcado11.ingresaLetra("u")
+        ahorcado11.ingresaLetra("p")
+        ahorcado11.ingresaLetra("w")
+        ahorcado11.ingresaLetra("v")
+        ahorcado11.ingresaLetra("l")
+        self.assertEqual(ahorcado11.getIntentosRestantes(),0)
+
+    def test_palabra_a_arriesgar_es_alfabetica(self):
+        ahorcado = Ahorcado()
+        ahorcado.limpiarLetras()
+        ahorcado.setPalabra("Ahorcado")
+        self.assertTrue(ahorcado.esPalabraPermitida("Ahorcado"))
+    
+    def test_palabra_a_arriesgar_es_no_alfabetica(self):
+        ahorcado = Ahorcado()
+        ahorcado.limpiarLetras()
+        ahorcado.setPalabra("Ahorcado")
+        self.assertFalse(ahorcado.esPalabraPermitida("Ahorcado9#"))
+
+    def test_palabra_arriesgada_acertada(self):
+        ahorcado = Ahorcado()
+        ahorcado.limpiarLetras()
+        ahorcado.setPalabra("Ahorcado")
+        ahorcado.arriesgaPalabra("Ahorcado")
+        self.assertTrue(ahorcado.esPalabraFinal())
+    
+    def test_palabra_arriesgada_no_acertada(self):
+        ahorcado = Ahorcado()
+        ahorcado.limpiarLetras()
+        ahorcado.setPalabra("Ahorcado")
+        ahorcado.arriesgaPalabra("Ahocado")
+        self.assertFalse(ahorcado.esPalabraFinal())
 
 class TestsResultadoFinal(unittest.TestCase):
 
     def test_valida_partida_perdida(self):
-        ahorcado2 = Ahorcado()
-        ahorcado2.setPalabra("Ahorcado")
-        ahorcado2.setPalabra("Ahorcado")
-        ahorcado2.ingresaLetra("f")
-        ahorcado2.ingresaLetra("i")
-        ahorcado2.ingresaLetra("m")
-        ahorcado2.ingresaLetra("u")
-        ahorcado2.ingresaLetra("j")
-        ahorcado2.ingresaLetra("k")
-        ahorcado2.ingresaLetra("p")
-        self.assertEqual("Perdido",ahorcado2.getEstadoFinalJuego())
+        ahorcado11 = Ahorcado()
+        ahorcado11.limpiarLetras()
+        ahorcado11.setPalabra("Ahorcado")
+        ahorcado11.ingresaLetra("f")
+        ahorcado11.ingresaLetra("i")
+        ahorcado11.ingresaLetra("m")
+        ahorcado11.ingresaLetra("u")
+        ahorcado11.ingresaLetra("j")
+        ahorcado11.ingresaLetra("k")
+        ahorcado11.ingresaLetra("p")
+        self.assertEqual("Perdido",ahorcado11.getEstadoFinalJuego())
 
     def test_valida_partida_ganada(self):
         ahorcado3 = Ahorcado()
@@ -159,5 +228,81 @@ class TestsResultadoFinal(unittest.TestCase):
         ahorcado3.ingresaLetra("c")
         ahorcado3.ingresaLetra("d")
         self.assertEqual("Ganado",ahorcado3.getEstadoFinalJuego())
+
+    def test_valida_resultado_final_partida_perdida(self):
+        ahorcado = Ahorcado()
+        ahorcado.setPalabra("Ahorcado")
+        ahorcado.limpiarLetras()
+        ahorcado.ingresaLetra("f")
+        ahorcado.ingresaLetra("i")
+        ahorcado.ingresaLetra("m")
+        ahorcado.ingresaLetra("u")
+        ahorcado.ingresaLetra("j")
+        ahorcado.ingresaLetra("k")
+        ahorcado.ingresaLetra("p")
+        self.assertEqual(ahorcado.calcularResultadoFinal(),0)
+
+    def test_valida_resultado_final_partida_ganada(self):
+        ahorcado = Ahorcado()
+        ahorcado.setPalabra("Ahorcado")
+        ahorcado.limpiarLetras()
+        ahorcado.ingresaLetra("a")
+        ahorcado.ingresaLetra("h")
+        ahorcado.ingresaLetra("o")
+        ahorcado.ingresaLetra("r")
+        ahorcado.ingresaLetra("c")
+        ahorcado.ingresaLetra("d")
+        self.assertEqual(ahorcado.calcularResultadoFinal(),65)
+
+    def test_valida_resultado_final_partida_ganada_palabra_arriesgada(self):
+        ahorcado = Ahorcado()
+        ahorcado.setPalabra("Ahorcado")
+        ahorcado.limpiarLetras()
+        ahorcado.arriesgaPalabra("Ahorcado")
+        self.assertEqual(ahorcado.calcularResultadoFinal(),784)
+
+    def test_valida_resultado_final_partida_ganada_palabra_arriesgada_con_3_intentos_fallidos_de_letras(self):
+        ahorcado = Ahorcado()
+        ahorcado.setPalabra("Ahorcado")
+        ahorcado.limpiarLetras()
+        ahorcado.ingresaLetra("f")
+        ahorcado.ingresaLetra("t")
+        ahorcado.ingresaLetra("m")
+        ahorcado.arriesgaPalabra("Ahorcado")
+        self.assertEqual(ahorcado.calcularResultadoFinal(),64)
+    
+    def test_valida_resultado_final_partida_ganada_palabra_arriesgada_con_3_intentos_acertados_de_letras(self):
+        ahorcado = Ahorcado()
+        ahorcado.setPalabra("Ahorcado")
+        ahorcado.limpiarLetras()
+        ahorcado.ingresaLetra("a")
+        ahorcado.ingresaLetra("h")
+        ahorcado.ingresaLetra("o")
+        ahorcado.arriesgaPalabra("Ahorcado")
+        self.assertEqual(ahorcado.calcularResultadoFinal(),196)
+
+    def test_valida_resultado_final_partida_ganada_palabra_arriesgada_con_intentos_fallido_palabra(self):
+        ahorcado = Ahorcado()
+        ahorcado.setPalabra("Ahorcado")
+        ahorcado.limpiarLetras()
+        ahorcado.arriesgaPalabra("Ahocado")
+        ahorcado.arriesgaPalabra("Ahorcado")
+        self.assertEqual(ahorcado.calcularResultadoFinal(),200)
+    
+class TestsRanking(unittest.TestCase):
+
+    def test_valida_1er_posicion_ranking(self):
+        ahorcado = Ahorcado()
+
+
+    def test_valida_posicion_intermedia_ranking(self):
+        ahorcado = Ahorcado()
+
+
+    def test_valida_ultima_posicion_ranking(self):
+        ahorcado = Ahorcado()
+
+
+
 
 
