@@ -68,13 +68,14 @@ class Ahorcado:
         print("")
         print(self.calcularResultadoFinal()," puntos")
         print("")
-
-        if self.calcularResultadoFinal() > self.usuarioActual.getPuntuacionMaxima():
-            self.usuarioActual.setPuntuacionMaxima(self.calcularResultadoFinal())
-
-        print("Top 10:")
-        for i, puesto in enumerate(self.puestosOrdenadosRanking()):
-            print(i+1 , " - ", puesto.getNombre(), " - ", puesto.getPuntuacionMaxima())
+        if(self.usuarioActual.getNombre() != ""):
+            if self.esPuntuacionActualMayorAMaxima():
+                self.usuarioActual.setPuntuacionMaxima(self.calcularResultadoFinal())
+            
+            print("Estas en el puesto ",self.rankingJugadorActual()," del ranking")
+            print("")
+            print("Top 10:")
+            print(self.top10())
         
     def getEstadoFinalJuego(self):
         if self.intentosFallidos == 7:
@@ -232,7 +233,6 @@ class Ahorcado:
         return 7 - self.getIntentosFallidos()
 
     #Resultado Final
-
     def calcularResultadoFinal(self):
         largoPalabra = len(self.palabra)
         resultado = largoPalabra*(self.getIntentosRestantes() ** 2)/(self.getIntentosTotales())
@@ -240,8 +240,13 @@ class Ahorcado:
             resultado = resultado*2
         return round(resultado)
 
-    #Ranking
+    def esPuntuacionActualMayorAMaxima(self):
+        if self.calcularResultadoFinal() > self.usuarioActual.getPuntuacionMaxima():
+            return True
+        else:
+            return False
 
+    #Ranking
     def puestosOrdenadosRanking(self):
         ranking = self.getUsuarios()
         ranking.sort(key=lambda u : u.puntuacionMaxima, reverse=True)
@@ -251,5 +256,14 @@ class Ahorcado:
         for i, us in enumerate(self.puestosOrdenadosRanking()):
             if us.getNombre() == self.getUsuarioActual().getNombre() and us.getPuntuacionMaxima() == self.getUsuarioActual().getPuntuacionMaxima():
                 return i+1
+
+    def top10(self):
+        lista = self.puestosOrdenadosRanking()[:10]
+        top10 = ""
+        for i, puesto in enumerate(lista):
+            top10 += str(i+1) + " - " + puesto.getNombre() + " - " + str(puesto.getPuntuacionMaxima()) + "\n"
+        return top10
+    
+        
 
         

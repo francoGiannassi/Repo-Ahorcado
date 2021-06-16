@@ -281,13 +281,33 @@ class TestsResultadoFinal(unittest.TestCase):
         ahorcado.arriesgaPalabra("Ahorcado")
         self.assertEqual(ahorcado.calcularResultadoFinal(),196)
 
-    def test_valida_resultado_final_partida_ganada_palabra_arriesgada_con_intentos_fallido_palabra(self):
+    def test_valida_resultado_final_partida_ganada_palabra_arriesgada_con_intento_fallido_palabra(self):
         ahorcado = Ahorcado()
         ahorcado.setPalabra("Ahorcado")
         ahorcado.limpiarLetras()
         ahorcado.arriesgaPalabra("Ahocado")
         ahorcado.arriesgaPalabra("Ahorcado")
         self.assertEqual(ahorcado.calcularResultadoFinal(),200)
+
+    def test_valida_cambio_puntuacion_maxima_por_una_nueva_mejor(self):
+        ahorcado = Ahorcado()
+        ahorcado.setPalabra("Ahorcado")
+        ahorcado.limpiarLetras()
+        ahorcado.getUsuarioActual().setPuntuacionMaxima(300)
+        ahorcado.arriesgaPalabra("Ahorcado")
+        self.assertTrue(ahorcado.esPuntuacionActualMayorAMaxima())
+
+    def test_valida_no_cambio_puntuacion_maxima_por_una_nueva_peor(self):
+        ahorcado = Ahorcado()
+        ahorcado.setPalabra("Ahorcado")
+        ahorcado.limpiarLetras()
+        ahorcado.getUsuarioActual().setPuntuacionMaxima(300)
+        ahorcado.ingresaLetra("f")
+        ahorcado.ingresaLetra("i")
+        ahorcado.ingresaLetra("m")
+        ahorcado.ingresaLetra("u")
+        ahorcado.arriesgaPalabra("Ahorcado")
+        self.assertFalse(ahorcado.esPuntuacionActualMayorAMaxima())
     
 class TestsRanking(unittest.TestCase):
 
