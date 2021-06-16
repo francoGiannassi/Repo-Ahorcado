@@ -6,7 +6,7 @@ class TestsLogIn(unittest.TestCase):
     
     def test_valida_usuario_anonimo(self):
         ahorcado = Ahorcado()
-        ahorcado.getUsuarioActual().setNombre("")
+        ahorcado.getUsuarioActual().setNombre("a")
         self.assertEqual("",ahorcado.getUsuarioActual().getNombre())
         
     def test_nombre_usuario_incorrecto(self):
