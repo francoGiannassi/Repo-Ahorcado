@@ -28,3 +28,9 @@ jobs:
       - name: Test with python unit test
         run: |
           python -m unittest test_ahorcado.py
+      - name: Code Coverage Report
+        run: |
+          pip install coverage
+          coverage run -m unittest
+          coverage report
+      
