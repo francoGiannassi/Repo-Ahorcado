@@ -33,6 +33,18 @@ class TestsLogIn(unittest.TestCase):
         ahorcado.getUsuarioActual().setNombre("Franco")
         self.assertFalse(ahorcado.existeUsuario(us.getNombre()))
 
+    def test_valida_contraseña_correcta(self):
+        ahorcado = Ahorcado()
+        us = Usuario()
+        us.setContraseña("hola#123")
+        self.assertTrue(ahorcado.getUsuarioActual().esContraseñaCorrecta("hola#123"))
+
+    def test_valida_contraseña_incorrecta(self):
+        ahorcado = Ahorcado()
+        us = Usuario()
+        us.setContraseña("holaaa#123456789")
+        self.assertFalse(ahorcado.getUsuarioActual().esContraseñaCorrecta("holaaa#123456789"))
+
 
 class TestsConfiguracion(unittest.TestCase):
     
@@ -203,6 +215,50 @@ class TestsJuego(unittest.TestCase):
         ahorcado.arriesgaPalabra("Ahocado")
         self.assertFalse(ahorcado.esPalabraFinal())
 
+    def test_valida_letras_incorrectas_cargadas(self):
+        ahorcado = Ahorcado()
+        ahorcado.limpiarLetras()
+        ahorcado.setPalabra("Ahorcado")
+        ahorcado.ingresaLetra("p")
+        ahorcado.ingresaLetra("m")
+        ahorcado.ingresaLetra("o")
+        ahorcado.ingresaLetra("f")
+        ahorcado.ingresaLetra("a")
+        ahorcado.ingresaLetra("u")
+        lista = ["p","m","f","u"]
+        self.assertEqual(lista,ahorcado.getLetrasIncorrectasMinus())
+
+    def test_valida_palabras_arriesgadas_incorrectas_cargadas(self):
+        ahorcado = Ahorcado()
+        ahorcado.limpiarPalabrasArriesgadasIncorrectas()
+        ahorcado.setPalabra("Ahorcado")
+        ahorcado.arriesgaPalabra("Ahcado")
+        ahorcado.arriesgaPalabra("Ahorcado")
+        ahorcado.arriesgaPalabra("Ahocardo")
+        lista = ["Ahcado","Ahocardo"]
+        self.assertEqual(lista,ahorcado.getPalabrasArriesgadasIncorrectas())
+
+    def test_valida_letra_de_pista(self):
+        ahorcado = Ahorcado()
+        ahorcado.limpiarPalabrasArriesgadasIncorrectas()
+        ahorcado.limpiarLetras()
+        ahorcado.setPalabra("Ahorcado")
+        ahorcado.ingresaLetra("a")
+        ahorcado.ingresaLetra("h")
+        pistasPosibles = ["o","r","c","d","o"]
+        self.assertIn(ahorcado.darPista(),pistasPosibles)
+
+    def test_valida_numero_de_pistas(self):
+        ahorcado = Ahorcado()
+        ahorcado.limpiarPalabrasArriesgadasIncorrectas()
+        ahorcado.limpiarLetras()
+        ahorcado.setPalabra("Ahorcado")
+        ahorcado.ingresaLetra("a")
+        ahorcado.ingresaLetra("h")
+        ahorcado.darPista()
+        ahorcado.darPista()
+        self.assertEqual(2,ahorcado.getNroPistas())
+
 class TestsResultadoFinal(unittest.TestCase):
 
     def test_valida_partida_perdida(self):
@@ -309,13 +365,14 @@ class TestsResultadoFinal(unittest.TestCase):
         ahorcado.arriesgaPalabra("Ahorcado")
         self.assertFalse(ahorcado.esPuntuacionActualMayorAMaxima())
     
+    
 class TestsRanking(unittest.TestCase):
 
     def test_valida_1er_posicion_top10(self):
         ahorcado = Ahorcado()
         ahorcado.limpiarUsuarios()
-        ahorcado.setUsuarios([Usuario("juan2",200),Usuario("fede3",100),Usuario("diego1",300),Usuario("pedro7",150),Usuario("julian9",50),
-                                    Usuario("damian4",250),Usuario("victor11",350),Usuario("roberto10",25),Usuario("david14",125)])
+        ahorcado.setUsuarios([Usuario("juan2","",200),Usuario("fede3","",100),Usuario("diego1","",300),Usuario("pedro7","",150),Usuario("julian9","",50),
+                                    Usuario("damian4","",250),Usuario("victor11","",350),Usuario("roberto10","",25),Usuario("david14","",125)])
         ahorcado.getUsuarioActual().setNombre("franco1")                                
         ahorcado.getUsuarioActual().setPuntuacionMaxima(400)
         self.assertEqual(ahorcado.rankingJugadorActual(),1)
@@ -323,8 +380,8 @@ class TestsRanking(unittest.TestCase):
     def test_valida_posicion_intermedia_top10(self):
         ahorcado = Ahorcado()
         ahorcado.limpiarUsuarios()
-        ahorcado.setUsuarios([Usuario("juan2",200),Usuario("fede3",100),Usuario("diego1",300),Usuario("pedro7",150),Usuario("julian9",50),
-                                    Usuario("damian4",250),Usuario("victor11",350),Usuario("roberto10",25),Usuario("david14",125)])
+        ahorcado.setUsuarios([Usuario("juan2","",200),Usuario("fede3","",100),Usuario("diego1","",300),Usuario("pedro7","",150),Usuario("julian9","",50),
+                                    Usuario("damian4","",250),Usuario("victor11","",350),Usuario("roberto10","",25),Usuario("david14","",125)])
         ahorcado.getUsuarioActual().setNombre("franco1")                                
         ahorcado.getUsuarioActual().setPuntuacionMaxima(175)
         self.assertEqual(ahorcado.rankingJugadorActual(),5)
@@ -332,8 +389,8 @@ class TestsRanking(unittest.TestCase):
     def test_valida_ultima_posicion_top10(self):
         ahorcado = Ahorcado()
         ahorcado.limpiarUsuarios()
-        ahorcado.setUsuarios([Usuario("juan2",200),Usuario("fede3",100),Usuario("diego1",300),Usuario("pedro7",150),Usuario("julian9",50),
-                                    Usuario("damian4",250),Usuario("victor11",350),Usuario("roberto10",25),Usuario("david14",125)])
+        ahorcado.setUsuarios([Usuario("juan2","",200),Usuario("fede3","",100),Usuario("diego1","",300),Usuario("pedro7","",150),Usuario("julian9","",50),
+                                    Usuario("damian4","",250),Usuario("victor11","",350),Usuario("roberto10","",25),Usuario("david14","",125)])
         ahorcado.getUsuarioActual().setNombre("franco1")                                
         ahorcado.getUsuarioActual().setPuntuacionMaxima(15)
         self.assertEqual(ahorcado.rankingJugadorActual(),10)
@@ -341,9 +398,9 @@ class TestsRanking(unittest.TestCase):
     def test_valida_posicion_fuera_limites_top_10_puesto_13(self):
         ahorcado = Ahorcado()
         ahorcado.limpiarUsuarios()
-        ahorcado.setUsuarios([Usuario("juan2",200),Usuario("fede3",100),Usuario("diego1",300),Usuario("pedro7",150),Usuario("julian9",50),
-                                Usuario("damian4",250),Usuario("victor11",350),Usuario("roberto10",25),Usuario("david14",125),
-                                    Usuario("rodrigo22",54),Usuario("alberto44",293),Usuario("pablo76",36)])
+        ahorcado.setUsuarios([Usuario("juan2","",200),Usuario("fede3","",100),Usuario("diego1","",300),Usuario("pedro7","",150),Usuario("julian9","",50),
+                                Usuario("damian4","",250),Usuario("victor11","",350),Usuario("roberto10","",25),Usuario("david14","",125),
+                                    Usuario("rodrigo22","",54),Usuario("alberto44","",293),Usuario("pablo76","",36)])
         ahorcado.getUsuarioActual().setNombre("franco1")                                
         ahorcado.getUsuarioActual().setPuntuacionMaxima(15)
         self.assertEqual(ahorcado.rankingJugadorActual(),13)

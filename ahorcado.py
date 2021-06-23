@@ -15,11 +15,14 @@ class Ahorcado:
 
     letrasCorrectas = []
     letrasIncorrectas = []
+    palabrasArriesgadasIncorrectas = []
 
     intentosFallidos = 0
     intentosTotales = 0
 
     palabraArriesgadaAcertada = False
+
+    nroPistas = 0
 
     #Juego
     def jugar(self):
@@ -140,6 +143,8 @@ class Ahorcado:
             else:
                 self.sumarIntentoFallido()
                 self.sumarIntentoFallido()
+                self.palabrasArriesgadasIncorrectas.append(palabra.capitalize())
+                self.palabraArriesgadaAcertada = False
             self.sumarIntentoTotal()
 
     def esPalabraPermitida(self, palabra):
@@ -147,6 +152,15 @@ class Ahorcado:
             return True
         else:
             return False
+
+    def esPalabraArriesgadaAcertada(self):
+        return self.palabraArriesgadaAcertada
+        
+    def getPalabrasArriesgadasIncorrectas(self):
+        return self.palabrasArriesgadasIncorrectas
+
+    def limpiarPalabrasArriesgadasIncorrectas(self):
+        self.palabrasArriesgadasIncorrectas = []
 
     #Usuarios
     def getUsuarioActual(self):
@@ -197,6 +211,13 @@ class Ahorcado:
     def getLetrasIncorrectas(self):
         return self.letrasIncorrectas
 
+    def getLetrasIncorrectasMinus(self):
+        lista = []
+        for letra in self.letrasIncorrectas:
+            if letra.islower() and letra.isalpha():
+                lista.append(letra)
+        return lista
+
     def esLetraCorrecta(self, letra):
         if letra.lower() in self.palabra.lower():
             return True
@@ -212,6 +233,25 @@ class Ahorcado:
     def limpiarLetras(self):
         self.letrasCorrectas = []
         self.letrasIncorrectas = []
+
+    def darPista(self):
+        letraElegida = ""
+        palabraDescompuesta = []
+        for letra in self.palabra:
+            palabraDescompuesta.append(letra)
+        seEligioLetra = False
+        if self.nroPistas >= 3:
+            letraElegida = "No se pueden dar más pistas"
+        else:
+            while not seEligioLetra:
+                letraElegida = random.choice(palabraDescompuesta)
+                if letraElegida not in self.letrasCorrectas:
+                    seEligioLetra = True
+            self.nroPistas+=1
+        return letraElegida
+
+    def getNroPistas(self):
+        return self.nroPistas
 
     #Intentos
     def sumarIntentoTotal(self):
@@ -254,7 +294,7 @@ class Ahorcado:
     
     def rankingJugadorActual(self):
         for i, us in enumerate(self.puestosOrdenadosRanking()):
-            if us.getNombre() == self.getUsuarioActual().getNombre() and us.getPuntuacionMaxima() == self.getUsuarioActual().getPuntuacionMaxima():
+            if us.getNombre() == self.getUsuarioActual().getNombre() and us.getPuntuacionMaxima() == self.getUsuarioActual().getPuntuacionMaxima() and us.getContraseña() == self.getUsuarioActual().getContraseña():
                 return i+1
 
     def top10(self):
