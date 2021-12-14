@@ -5,6 +5,7 @@ if __name__ == "__main__":
     volverAJugar = "s"
     while volverAJugar == "s":
         ahorcado = Ahorcado()
+        ahorcado.limpiarVariables()
         ahorcado.setPalabrasFaciles(["Ola","Rio","Casa","Via","Sol"])
         ahorcado.setPalabrasIntermedias(["Juego","Ahorcado","Visual","Estudio","Codigo"])
         ahorcado.setPalabrasDificiles(["Otorrinolaringologo","Desoxirribonucleico","Onomatopeya","Electroencefalografista"])

@@ -63,6 +63,12 @@ class Ahorcado:
                 self.ingresaLetra(self.darPista())
                 print("Pistas Restantes: " + str(3 - self.getNroPistas()))
             print("Intentos Restantes: ", self.getIntentosRestantes())
+            print("")
+            if len(self.getLetrasIncorrectasMinus()) > 0:
+                print("Letras Incorrectas: " + str(self.getLetrasIncorrectasMinus()))
+            if len(self.getPalabrasArriesgadasIncorrectas()) > 0:
+                print("Palabras Arriesgadas Incorrectas: " + str(self.getPalabrasArriesgadasIncorrectas()))
+            print("")
             
         cartel = ""
         print("")
