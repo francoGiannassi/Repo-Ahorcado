@@ -33,32 +33,37 @@ class Ahorcado:
         op = int(input("Opción: "))
         if op == 1:
             self.getUsuarioActual().setNombre(input("Nombre de Usuario: "))
+            self.getUsuarioActual().setContrasenia(input("Contraseña: "))
         elif op == 2:
-            self.getUsuarioActual().setNombre("")
+            self.getUsuarioActual().setNombre("")  
 
         print("Dificultad:")
         print("1 - Facil")
         print("2 - Intermedio")
         print("3 - Dificil")
+
         dif = int(input("Opción: "))
         if dif == 1:
-           self.setPalabra(self.seleccionarPalabraRandom(self.palabrasFaciles)) 
+            self.setPalabra(self.seleccionarPalabraRandom(self.palabrasFaciles)) 
         elif dif == 2:
-           self.setPalabra(self.seleccionarPalabraRandom(self.palabrasIntermedias))
+            self.setPalabra(self.seleccionarPalabraRandom(self.palabrasIntermedias))
         elif dif == 3:
-           self.setPalabra(self.seleccionarPalabraRandom(self.palabrasDificiles))
-        
+            self.setPalabra(self.seleccionarPalabraRandom(self.palabrasDificiles))
+            
         print("")
         print("Arranca el Juego!! Suerte!!")
         while self.getEstadoFinalJuego() == "En Juego":
             print(self.getPalabraParcial())
-            letra_op = input("Ingresa una letra (0 - arriesga palabra): ")
-            if letra_op != str(0):
+            letra_op = input("Ingresa una letra (0 - arriesga palabra, 1 - dar una pista): " if self.getNroPistas() < 3 else "Ingresa una letra (0 - arriesga palabra): ")
+            if letra_op != str(0) and letra_op != str(1):
                 self.ingresaLetra(letra_op)
-            else:
+            elif letra_op == str(0):
                 self.arriesgaPalabra(input("Ingresa la palabra a arriesgar: "))
+            elif letra_op == str(1):
+                self.ingresaLetra(self.darPista())
+                print("Pistas Restantes: " + str(3 - self.getNroPistas()))
             print("Intentos Restantes: ", self.getIntentosRestantes())
-        
+            
         cartel = ""
         print("")
         print(self.getPalabra().upper())
@@ -73,8 +78,7 @@ class Ahorcado:
         print("")
         if(self.usuarioActual.getNombre() != ""):
             if self.esPuntuacionActualMayorAMaxima():
-                self.usuarioActual.setPuntuacionMaxima(self.calcularResultadoFinal())
-            
+                self.usuarioActual.setPuntuacionMaxima(self.calcularResultadoFinal())    
             print("Estas en el puesto ",self.rankingJugadorActual()," del ranking")
             print("")
             print("Top 10:")
@@ -294,7 +298,7 @@ class Ahorcado:
     
     def rankingJugadorActual(self):
         for i, us in enumerate(self.puestosOrdenadosRanking()):
-            if us.getNombre() == self.getUsuarioActual().getNombre() and us.getPuntuacionMaxima() == self.getUsuarioActual().getPuntuacionMaxima() and us.getContraseña() == self.getUsuarioActual().getContraseña():
+            if us.getNombre() == self.getUsuarioActual().getNombre() and us.getPuntuacionMaxima() == self.getUsuarioActual().getPuntuacionMaxima() and us.getContrasenia() == self.getUsuarioActual().getContrasenia():
                 return i+1
 
     def top10(self):
@@ -303,6 +307,28 @@ class Ahorcado:
         for i, puesto in enumerate(lista):
             top10 += str(i+1) + " - " + puesto.getNombre() + " - " + str(puesto.getPuntuacionMaxima()) + "\n"
         return top10
+    
+    #Varios
+
+    def limpiarVariables(self):
+        self.palabra = ""
+        self.palabrasFaciles = []
+        self.palabrasIntermedias = []
+        self.palabrasDificiles = []
+
+        self.usuarioActual = Usuario()
+        self.usuarios.append(self.usuarioActual)
+
+        self.letrasCorrectas = []
+        self.letrasIncorrectas = []
+        self.palabrasArriesgadasIncorrectas = []
+
+        self.intentosFallidos = 0
+        self.intentosTotales = 0
+
+        self.palabraArriesgadaAcertada = False
+
+        self.nroPistas = 0
     
         
 

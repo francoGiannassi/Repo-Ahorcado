@@ -33,17 +33,17 @@ class TestsLogIn(unittest.TestCase):
         ahorcado.getUsuarioActual().setNombre("Franco")
         self.assertFalse(ahorcado.existeUsuario(us.getNombre()))
 
-    def test_valida_contraseña_correcta(self):
+    def test_valida_contrasenia_correcta(self):
         ahorcado = Ahorcado()
         us = Usuario()
-        us.setContraseña("hola#123")
-        self.assertTrue(ahorcado.getUsuarioActual().esContraseñaCorrecta("hola#123"))
+        us.setContrasenia("hola#123")
+        self.assertTrue(ahorcado.getUsuarioActual().esContraseniaCorrecta("hola#123"))
 
-    def test_valida_contraseña_incorrecta(self):
+    def test_valida_contrasenia_incorrecta(self):
         ahorcado = Ahorcado()
         us = Usuario()
-        us.setContraseña("holaaa#123456789")
-        self.assertFalse(ahorcado.getUsuarioActual().esContraseñaCorrecta("holaaa#123456789"))
+        us.setContrasenia("holaaa#123456789")
+        self.assertFalse(ahorcado.getUsuarioActual().esContraseniaCorrecta("holaaa#123456789"))
 
 
 class TestsConfiguracion(unittest.TestCase):

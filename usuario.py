@@ -1,11 +1,11 @@
 class Usuario:
 
     nombre = ""
-    contraseña = ""
+    contrasenia = ""
     puntuacionMaxima = 0
 
 
-    def __init__(self, nombre="",contraseña="" ,puntuacionMaxima=0):
+    def __init__(self, nombre="", contrasenia="" ,puntuacionMaxima=0):
         self.nombre = nombre
         self.puntuacionMaxima = puntuacionMaxima
 
@@ -18,8 +18,8 @@ class Usuario:
         else:
             return False
 
-    def esContraseñaCorrecta(self,contraseña):
-        if len(contraseña) <= 15:
+    def esContraseniaCorrecta(self,contrasenia):
+        if len(contrasenia) <= 15:
             return True
         else:
             return False
@@ -31,12 +31,12 @@ class Usuario:
     def getNombre(self):
         return self.nombre
 
-    def setContraseña(self,contraseña):
-        if self.esContraseñaCorrecta(contraseña):
-            self.contraseña = contraseña
+    def setContrasenia(self,contrasenia):
+        if self.esContraseniaCorrecta(contrasenia):
+            self.contrasenia = contrasenia
 
-    def getContraseña(self):
-        return self.contraseña
+    def getContrasenia(self):
+        return self.contrasenia
 
     def setPuntuacionMaxima(self, puntuacion):
         self.puntuacionMaxima = puntuacion
