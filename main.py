@@ -5,7 +5,6 @@ if __name__ == "__main__":
     volverAJugar = "s"
     while volverAJugar == "s":
         ahorcado = Ahorcado()
-        ahorcado.limpiarVariables()
         ahorcado.setPalabrasFaciles(["Ola","Rio","Casa","Via","Sol"])
         ahorcado.setPalabrasIntermedias(["Juego","Ahorcado","Visual","Estudio","Codigo"])
         ahorcado.setPalabrasDificiles(["Otorrinolaringologo","Desoxirribonucleico","Onomatopeya","Electroencefalografista"])
@@ -14,4 +13,5 @@ if __name__ == "__main__":
                                 Usuario("damian4","",250),Usuario("victor11","",350),Usuario("roberto10","",25),Usuario("david14","",125),
                                     Usuario("rodrigo22","",54),Usuario("alberto44","",293),Usuario("pablo76","",36)])
         ahorcado.jugar()
+        ahorcado.limpiarVariables()
         volverAJugar = input("¿Desea volver a jugar? (s/n): ")
